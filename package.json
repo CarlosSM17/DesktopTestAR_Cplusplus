@@ -1,0 +1,9 @@
+{   
+	"name": "visualizacion-codigo-3d",   
+	"version": "1.0.0",   
+	"description": "Visualización 3D de ejercicios de programación en C++",   
+	"main": "server.js",   
+	"scripts": {     
+		"start": "node server.js"   },   
+	"dependencies": {     "express": "^4.18.2"   } 
+}
