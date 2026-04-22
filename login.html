@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Visualización 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            color: #2c3e50;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">🎓</div>
+        </div>
+        
+        <h1>Bienvenido</h1>
+        <p class="subtitle">C++: Estructuras de Datos y Ciclos</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="userId">ID de Usuario</label>
+                <input 
+                    type="text" 
+                    id="userId" 
+                    name="userId" 
+                    placeholder="Ingresa tu ID de estudiante"
+                    maxlength="50"
+                    autocomplete="off"
+                    required
+                >
+                <div class="character-count">
+                    <span id="charCount">0</span>/50 caracteres
+                </div>
+                <div class="error-message" id="errorMessage">
+                    Por favor, ingresa un ID válido
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login" id="loginBtn">
+                Comenzar
+            </button>
+        </form>
+        
+        <div class="info-box">
+            <p>
+                💡 <strong>Información:</strong> Tu ID será utilizado únicamente para 
+                monitorear tu progreso y tiempo de estudio en cada ejercicio.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const userIdInput = document.getElementById('userId');
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const charCount = document.getElementById('charCount');
+
+        // Contador de caracteres
+        userIdInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = length;
+            
+            // Ocultar mensaje de error al escribir
+            if (errorMessage.classList.contains('show')) {
+                errorMessage.classList.remove('show');
+            }
+        });
+
+        // Validar y procesar el login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = userIdInput.value.trim();
+            
+            // Validación simple
+            if (userId.length < 2) {
+                errorMessage.textContent = 'El ID debe tener al menos 2 caracteres';
+                errorMessage.classList.add('show');
+                userIdInput.focus();
+                return;
+            }
+            
+            // Validar que no contenga solo espacios
+            if (!/\S/.test(userId)) {
+                errorMessage.textContent = 'El ID no puede estar vacío';
+                errorMessage.classList.add('show');
+                userIdInput.focus();
+                return;
+            }
+
+            // Guardar información de sesión
+            const sessionData = {
+                userId: userId,
+                loginTime: new Date().toISOString(),
+                sessionId: generateSessionId()
+            };
+            
+            // Guardar en localStorage
+            localStorage.setItem('userSession', JSON.stringify(sessionData));
+            
+            // Registrar el inicio de sesión
+            logActivity('login', {
+                userId: userId,
+                timestamp: sessionData.loginTime,
+                sessionId: sessionData.sessionId
+            });
+            
+            // Deshabilitar botón y mostrar feedback
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Iniciando...';
+            
+            // Redireccionar después de un breve delay
+            setTimeout(() => {
+                window.location.href = 'Index.html';
+            }, 500);
+        });
+
+        // Generar ID único de sesión
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Función para registrar actividades
+        function logActivity(action, data) {
+            // Obtener historial de actividades
+            let activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
+            
+            // Agregar nueva actividad
+            activityLog.push({
+                action: action,
+                data: data,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Guardar en localStorage
+            localStorage.setItem('activityLog', JSON.stringify(activityLog));
+            
+            // También intentar enviar al servidor si está disponible
+            sendToServer(action, data);
+        }
+
+        // Función para enviar datos al servidor
+        function sendToServer(action, data) {
+            // Esta función intentará enviar los datos al servidor
+            // Si falla, los datos ya están guardados en localStorage
+            fetch('/api/log-activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: action,
+                    data: data,
+                    timestamp: new Date().toISOString()
+                })
+            }).catch(err => {
+                // Silenciosamente fallar si no hay servidor
+                console.log('Offline mode: datos guardados localmente');
+            });
+        }
+
+        // Auto-focus en el input al cargar
+        window.addEventListener('load', () => {
+            userIdInput.focus();
+        });
+
+        // Permitir Enter para enviar
+        userIdInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

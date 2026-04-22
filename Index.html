@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++: Estructuras de Datos y Ciclos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            background: #fafafa;
+            transition: transform 0.2s, background 0.2s;
+        }
+        li:hover {
+            transform: translateX(5px);
+            background: #edf7ff;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+        strong {
+            color: #e67e22;
+        }
+        .icon {
+            margin-right: 10px;
+        }
+        .user-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info .user-id {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .user-info .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .user-info .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="user-info">
+            <div>
+                <span class="icon">👤</span>
+                <span class="user-id" id="userIdDisplay">Cargando...</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+        
+        <h1>C++: Estructuras de Datos y Ciclos</h1>
+
+        <h2><span class="icon">🏗️</span>Ejercicios: Estructuras de Datos (Arrays, Structs y Punteros)</h2>
+        <ul>
+            <li><a href="sumaA/sumaA.html"><strong>Suma de Array:</strong> Crea un arreglo de 10 enteros, pide al usuario que los ingrese y calcula la suma total.</a></li>
+            <li><a href="MayorA/mayorA.html"><strong>El Mayor del Grupo:</strong> Dado un arreglo de 10 números flotantes, encuentra y muestra el valor más alto.</a></li>
+            <li><a href="InvertirArreglo/invertirA.html"><strong>Inversión de Orden:</strong> Declara un arreglo de 5 caracteres e imprime sus elementos en orden inverso.</a></li>
+            <li><a href="structE/structE.html"><strong>Promedio de Notas:</strong> Crea un arreglo de una struct Estudiante para 3 personas y calcula el promedio grupal.</a></li>
+            <li><a href="busquedaA/busquedaA.html"><strong>Buscador de Elementos:</strong> Indica si un número existe en el arreglo y en qué posición.</a></li>
+            <li><a href="punteroV/punteroV.html"><strong>Dirección de Memoria:</strong> Declara una variable entera y un puntero que apunte a ella para imprimir su valor.</a></li>
+            <li><a href="matriz/matrizI.html"><strong>Matriz Identidad:</strong> Inicializa manualmente una matriz de 3x3 para que sea una matriz identidad.</a></li>
+            <li><a href="inventario/inventarioS.html"><strong>Inventario Básico:</strong> Muestra productos de una struct que cuesten más de 50 unidades.</a></li>
+        </ul>
+
+        <h2><span class="icon">🔄</span>Ejercicios: Ciclos</h2>
+        <ul>
+            <li><a href="multiplicar/multiplicarT.html"><strong>Tabla de Multiplicar:</strong> Genera la tabla de multiplicar del 1 al 10 de un número dado.</a></li>
+            <li><a href="sumaP/sumaP.html"><strong>Suma de Pares:</strong> Calcula la suma de todos los números pares entre 1 y 20 usando while.</a></li>
+            <li><a href="factorial/factorial.html"><strong>Factorial de un Número:</strong> Solicita un número y calcula su factorial (n!) mediante un ciclo.</a></li>
+            <li><a href="validacionE/validacionE.html"><strong>Validación de Entrada:</strong> Usa do-while para pedir un número hasta que sea primo.</a></li>
+            <li><a href="rectangulo/rectangulo.html"><strong>Dibujo de Rectángulo:</strong> Dibuja un rectángulo de asteriscos (*) usando ciclos anidados.</a></li>
+            <li><a href="fibonacci/fibonacci.html"><strong>Serie de Fibonacci:</strong> Genera los primeros 15 números de la serie usando un ciclo for.</a></li>
+            <li><a href="adivinaN/adivinaN.html"><strong>Adivina el Número:</strong> Juego de adivinanza con pistas de "más alto" o "más bajo" en un ciclo.</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Verificar sesión al cargar la página
+        window.addEventListener('load', function() {
+            checkSession();
+            logPageView();
+        });
+
+        function checkSession() {
+            const session = localStorage.getItem('userSession');
+            
+            if (!session) {
+                // No hay sesión activa, redirigir a login
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const sessionData = JSON.parse(session);
+                
+                // Mostrar ID de usuario
+                document.getElementById('userIdDisplay').textContent = 
+                    'Usuario: ' + sessionData.userId;
+                
+                // Verificar si la sesión no ha expirado (opcional, 24 horas)
+                const loginTime = new Date(sessionData.loginTime);
+                const currentTime = new Date();
+                const hoursSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60);
+                
+                if (hoursSinceLogin > 24) {
+                    // Sesión expirada
+                    logout();
+                }
+            } catch (e) {
+                // Sesión corrupta, redirigir a login
+                localStorage.removeItem('userSession');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function logout() {
+            const session = localStorage.getItem('userSession');
+            
+            if (session) {
+                const sessionData = JSON.parse(session);
+                
+                // Registrar cierre de sesión
+                logActivity('logout', {
+                    userId: sessionData.userId,
+                    sessionId: sessionData.sessionId,
+                    sessionDuration: calculateSessionDuration(sessionData.loginTime)
+                });
+            }
+            
+            // Limpiar sesión
+            localStorage.removeItem('userSession');
+            
+            // Redirigir a login
+            window.location.href = 'login.html';
+        }
+
+        function logPageView() {
+            const session = localStorage.getItem('userSession');
+            if (!session) return;
+            
+            const sessionData = JSON.parse(session);
+            
+            logActivity('page_view', {
+                userId: sessionData.userId,
+                sessionId: sessionData.sessionId,
+                page: 'index',
+                url: window.location.href
+            });
+        }
+
+        function logActivity(action, data) {
+            let activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
+            
+            activityLog.push({
+                action: action,
+                data: data,
+                timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('activityLog', JSON.stringify(activityLog));
+            
+            // Enviar al servidor
+            fetch('/api/log-activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: action,
+                    data: data,
+                    timestamp: new Date().toISOString()
+                })
+            }).catch(err => {
+                console.log('Offline mode: datos guardados localmente');
+            });
+        }
+
+        function calculateSessionDuration(loginTime) {
+            const start = new Date(loginTime);
+            const end = new Date();
+            const durationMs = end - start;
+            const durationMinutes = Math.floor(durationMs / (1000 * 60));
+            return durationMinutes;
+        }
+
+        // Interceptar clics en ejercicios para registrar actividad
+        document.addEventListener('DOMContentLoaded', function() {
+            const exerciseLinks = document.querySelectorAll('a[href*=".html"]');
+            
+            exerciseLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const exerciseName = this.querySelector('strong').textContent;
+                    const exerciseUrl = this.getAttribute('href');
+                    
+                    const session = localStorage.getItem('userSession');
+                    if (session) {
+                        const sessionData = JSON.parse(session);
+                        
+                        // Guardar tiempo de inicio del ejercicio
+                        localStorage.setItem('currentExercise', JSON.stringify({
+                            name: exerciseName,
+                            url: exerciseUrl,
+                            startTime: new Date().toISOString(),
+                            userId: sessionData.userId,
+                            sessionId: sessionData.sessionId
+                        }));
+                        
+                        logActivity('exercise_start', {
+                            userId: sessionData.userId,
+                            sessionId: sessionData.sessionId,
+                            exerciseName: exerciseName,
+                            exerciseUrl: exerciseUrl
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
